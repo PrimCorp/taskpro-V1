@@ -1,0 +1,24 @@
+{
+  "name": "TaskPro - Gestor de Tareas",
+  "short_name": "TaskPro",
+  "description": "Gestiona tus tareas, reuniones y recordatorios",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#667eea",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect fill='%23667eea' width='192' height='192' rx='40'/%3E%3Ctext y='140' font-size='120' fill='white' text-anchor='middle' x='96'%3E📋%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect fill='%23667eea' width='512' height='512' rx='80'/%3E%3Ctext y='380' font-size='320' fill='white' text-anchor='middle' x='256'%3E📋%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

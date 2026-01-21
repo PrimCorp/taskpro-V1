@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="TaskPro">
+    <meta name="description" content="Gestiona tareas, reuniones y recordatorios">
+    <title>TaskPro - Gestor de Tareas</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23667eea' width='100' height='100'/%3E%3Ctext y='75' font-size='70' fill='white' text-anchor='middle' x='50'%3E📋%3C/text%3E%3C/svg%3E">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gray-50: #f9fafb;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 50px rgba(0,0,0,0.2);
+        }
+
+        .install-prompt {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 16px 20px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            position: sticky;
+            top: 0;
+            z-index: 101;
+        }
+
+        .install-prompt.show {
+            display: flex;
+        }
+
+        .install-prompt-content {
+            flex: 1;
+        }
+
+        .install-prompt button {
+            padding: 10px 20px;
+            background: white;
+            color: var(--success);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+
+        .sync-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85em;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--gray-50);
+            border-bottom: 2px solid var(--gray-200);
+            overflow-x: auto;
+            position: sticky;
+            top: 68px;
+            z-index: 99;
+        }
+
+        .tab {
+            flex: 1;
+            min-width: 120px;
+            padding: 16px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            border: none;
+            background: transparent;
+            font-size: 0.95em;
+            color: var(--gray-600);
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab.active {
+            background: white;
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            opacity: 0.95;
+            font-size: 0.95em;
+        }
+
+        .form-section {
+            background: var(--gray-50);
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            border: 1px solid var(--gray-200);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--gray-700);
+            font-size: 0.9em;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        input, textarea, select {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 16px;
+            border: 2px solid var(--gray-200);
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: inherit;
+        }
+
+        textarea {
+            min-height: 100px;
+            width: 100%;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .tasks-grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .task-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .task-card.priority-alta {
+            border-left-color: var(--danger);
+            background: linear-gradient(to right, #fef2f2 0%, white 5%);
+        }
+
+        .task-card.priority-media {
+            border-left-color: var(--warning);
+            background: linear-gradient(to right, #fffbeb 0%, white 5%);
+        }
+
+        .task-card.priority-baja {
+            border-left-color: var(--success);
+            background: linear-gradient(to right, #f0fdf4 0%, white 5%);
+        }
+
+        .task-card.completed {
+            opacity: 0.6;
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+            gap: 12px;
+        }
+
+        .task-title {
+            font-size: 1.15em;
+            font-weight: 600;
+            color: var(--gray-800);
+            flex: 1;
+        }
+
+        .task-card.completed .task-title {
+            text-decoration: line-through;
+        }
+
+        .priority-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 700;
+            color: white;
+        }
+
+        .priority-alta-badge { background: var(--danger); }
+        .priority-media-badge { background: var(--warning); }
+        .priority-baja-badge { background: var(--success); }
+
+        .task-description {
+            color: var(--gray-600);
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .task-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 0.85em;
+            color: var(--gray-500);
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .task-actions .btn {
+            padding: 8px 16px;
+            font-size: 0.9em;
+        }
+
+        .filters {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: 2px solid var(--gray-200);
+            background: white;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--gray-400);
+        }
+
+        .empty-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .alert-box {
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 12px;
+            background: #fef3c7;
+            border-left: 4px solid var(--warning);
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            z-index: 1000;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        .notification.success { border-left: 4px solid var(--success); }
+        .notification.error { border-left: 4px solid var(--danger); }
+
+        @media (max-width: 768px) {
+            .tab { font-size: 0.85em; padding: 12px; }
+            .tab-content { padding: 16px; }
+            .input-row { flex-direction: column; }
+            input, select { width: 100%; min-width: unset; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="install-prompt" id="installPrompt">
+            <div class="install-prompt-content">
+                <strong>📱 Instalar TaskPro</strong>
+                <p style="font-size: 0.9em; opacity: 0.9;">Instala la app para usarla como aplicación</p>
+            </div>
+            <button onclick="installApp()">Instalar</button>
+            <button onclick="closePrompt()" style="background: transparent; color: white;">✕</button>
+        </div>
+
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">📋 TaskPro</div>
+                <div class="sync-status">💾 Guardado</div>
+            </div>
+        </header>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('tasks')">📝 Tareas</button>
+            <button class="tab" onclick="switchTab('reminders')">⏰ Recordatorios</button>
+        </div>
+
+        <div id="tasks" class="tab-content active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalTasks">0</div>
+                    <div class="stat-label">Total</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="pendingTasks">0</div>
+                    <div class="stat-label">Pendientes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="completedTasks">0</div>
+                    <div class="stat-label">Completadas</div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3 style="margin-bottom: 20px;">➕ Nueva Tarea</h3>
+                <div class="form-group">
+                    <label class="form-label">Título</label>
+                    <input type="text" id="taskTitle" placeholder="Ej: Preparar presentación">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Descripción</label>
+                    <textarea id="taskDescription" placeholder="Detalles..."></textarea>
+                </div>
+                <div class="input-row">
+                    <select id="taskPriority" style="flex: 1;">
+                        <option value="alta">🔴 Alta</option>
+                        <option value="media" selected>🟡 Media</option>
+                        <option value="baja">🟢 Baja</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="addTask()">➕ Agregar</button>
+                </div>
+            </div>
+
+            <div class="filters">
+                <button class="filter-btn active" onclick="filterTasks('todas')">Todas</button>
+                <button class="filter-btn" onclick="filterTasks('pendientes')">Pendientes</button>
+                <button class="filter-btn" onclick="filterTasks('completadas')">Completadas</button>
+                <button class="filter-btn" onclick="filterTasks('alta')">🔴 Alta</button>
+            </div>
+
+            <div class="tasks-grid" id="taskList"></div>
+        </div>
+
+        <div id="reminders" class="tab-content">
+            <h2 style="margin-bottom: 24px;">⏰ Recordatorios</h2>
+
+            <div class="alert-box">
+                <span style="font-size: 1.5em;">⚠️</span>
+                <div>
+                    <strong>Nota:</strong> Los recordatorios funcionan mejor cuando la app está abierta. Para alarmas confiables usa la app de Alarmas de tu teléfono.
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="form-group">
+                    <label class="form-label">¿Qué recordar?</label>
+                    <input type="text" id="reminderText" placeholder="Ej: Llamar al cliente">
+                </div>
+                <div class="input-row">
+                    <input type="datetime-local" id="reminderTime" style="flex: 1;">
+                    <button class="btn btn-primary" onclick="addReminder()">⏰ Crear</button>
+                </div>
+            </div>
+
+            <div class="tasks-grid" id="reminderList"></div>
+        </div>
+    </div>
+
+    <script>
+        let deferredPrompt;
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let reminders = JSON.parse(localStorage.getItem('reminders')) || [];
+        let currentFilter = 'todas';
+
+        // PWA Installation
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installPrompt').classList.add('show');
+        });
+
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((result) => {
+                    if (result.outcome === 'accepted') {
+                        showNotification('¡Instalado!', 'success');
+                    }
+                    deferredPrompt = null;
+                    document.getElementById('installPrompt').classList.remove('show');
+                });
+            }
+        }
+
+        function closePrompt() {
+            document.getElementById('installPrompt').classList.remove('show');
+        }
+
+        // Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(err => console.log('SW error:', err));
+        }
+
+        // Tabs
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tab).classList.add('active');
+        }
+
+        // Tasks
+        function addTask() {
+            const title = document.getElementById('taskTitle').value.trim();
+            if (!title) {
+                showNotification('Ingresa un título', 'error');
+                return;
+            }
+
+            const task = {
+                id: Date.now(),
+                title,
+                description: document.getElementById('taskDescription').value.trim(),
+                priority: document.getElementById('taskPriority').value,
+                completed: false,
+                createdAt: new Date().toISOString()
+            };
+
+            tasks.unshift(task);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            renderTasks();
+
+            document.getElementById('taskTitle').value = '';
+            document.getElementById('taskDescription').value = '';
+            showNotification('✅ Tarea creada', 'success');
+        }
+
+        function toggleTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                task.completed = !task.completed;
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                renderTasks();
+            }
+        }
+
+        function deleteTask(id) {
+            if (confirm('¿Eliminar?')) {
+                tasks = tasks.filter(t => t.id !== id);
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                renderTasks();
+            }
+        }
+
+        function filterTasks(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            renderTasks();
+        }
+
+        function renderTasks() {
+            let filtered = tasks;
+            if (currentFilter === 'pendientes') filtered = tasks.filter(t => !t.completed);
+            if (currentFilter === 'completadas') filtered = tasks.filter(t => t.completed);
+            if (currentFilter === 'alta') filtered = tasks.filter(t => t.priority === 'alta' && !t.completed);
+
+            const list = document.getElementById('taskList');
+            if (filtered.length === 0) {
+                list.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><h3>No hay tareas</h3></div>';
+            } else {
+                list.innerHTML = filtered.map(t => `
+                    <div class="task-card priority-${t.priority} ${t.completed ? 'completed' : ''}">
+                        <div class="task-header">
+                            <div class="task-title">${t.title}</div>
+                            <span class="priority-badge priority-${t.priority}-badge">${t.priority.toUpperCase()}</span>
+                        </div>
+                        ${t.description ? `<div class="task-description">${t.description}</div>` : ''}
+                        <div class="task-meta">
+                            <span>📅 ${new Date(t.createdAt).toLocaleDateString('es')}</span>
+                        </div>
+                        <div class="task-actions">
+                            <button class="btn btn-success" onclick="toggleTask(${t.id})">
+                                ${t.completed ? '↩️ Reactivar' : '✅ Completar'}
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteTask(${t.id})">🗑️</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('totalTasks').textContent = tasks.length;
+            document.getElementById('pendingTasks').textContent = tasks.filter(t => !t.completed).length;
+            document.getElementById('completedTasks').textContent = tasks.filter(t => t.completed).length;
+        }
+
+        // Reminders
+        function addReminder() {
+            const text = document.getElementById('reminderText').value.trim();
+            const time = document.getElementById('reminderTime').value;
+
+            if (!text || !time) {
+                showNotification('Completa los campos', 'error');
+                return;
+            }
+
+            const reminder = {
+                id: Date.now(),
+                text,
+                time: new Date(time).toISOString(),
+                createdAt: new Date().toISOString()
+            };
+
+            reminders.unshift(reminder);
+            localStorage.setItem('reminders', JSON.stringify(reminders));
+            renderReminders();
+
+            document.getElementById('reminderText').value = '';
+            document.getElementById('reminderTime').value = '';
+
+            if ('Notification' in window) {
+                Notification.requestPermission();
+            }
+
+            showNotification('⏰ Recordatorio creado', 'success');
+        }
+
+        function deleteReminder(id) {
+            if (confirm('¿Eliminar?')) {
+                reminders = reminders.filter(r => r.id !== id);
+                localStorage.setItem('reminders', JSON.stringify(reminders));
+                renderReminders();
+            }
+        }
+
+        function renderReminders() {
+            const list = document.getElementById('reminderList');
+            if (reminders.length === 0) {
+                list.innerHTML = '<div class="empty-state"><div class="empty-icon">⏰</div><h3>No hay recordatorios</h3></div>';
+                return;
+            }
+
+            const sorted = [...reminders].sort((a, b) => new Date(a.time) - new Date(b.time));
+            list.innerHTML = sorted.map(r => {
+                const date = new Date(r.time);
+                const isPast = date < new Date();
+                const isToday = date.toDateString() === new Date().toDateString();
+
+                return `
+                    <div class="task-card ${isPast ? 'completed' : ''}">
+                        <div class="task-header">
+                            <div class="task-title">${r.text}</div>
+                            ${isToday && !isPast ? '<span class="priority-badge priority-alta-badge">HOY</span>' : ''}
+                        </div>
+                        <div class="task-meta">
+                            <span>📅 ${date.toLocaleDateString('es')}</span>
+                            <span>⏰ ${date.toLocaleTimeString('es', {hour: '2-digit', minute: '2-digit'})}</span>
+                            ${isPast ? '<span style="color: var(--danger);">Vencido</span>' : '<span style="color: var(--success);">Programado</span>'}
+                        </div>
+                        <div class="task-actions">
+                            <button class="btn btn-danger" onclick="deleteReminder(${r.id})">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function showNotification(msg, type) {
+            const n = document.createElement('div');
+            n.className = `notification ${type}`;
+            n.textContent = msg;
+            document.body.appendChild(n);
+            setTimeout(() => n.remove(), 3000);
+        }
+
+        // Init
+        renderTasks();
+        renderReminders();
+    </script>
+</body>
+</html>
