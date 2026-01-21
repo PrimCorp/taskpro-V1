@@ -7,8 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="TaskPro">
-    <meta name="description" content="Gestiona tareas, reuniones y recordatorios">
-    <title>TaskPro - Gestor Completo</title>
+    <title>TaskPro - Con Alarmas</title>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23667eea' width='100' height='100'/%3E%3Ctext y='75' font-size='70' fill='white' text-anchor='middle' x='50'%3E📋%3C/text%3E%3C/svg%3E">
     
@@ -63,13 +62,9 @@
             z-index: 101;
         }
 
-        .install-prompt.show {
-            display: flex;
-        }
+        .install-prompt.show { display: flex; }
 
-        .install-prompt-content {
-            flex: 1;
-        }
+        .install-prompt-content { flex: 1; }
 
         .install-prompt button {
             padding: 10px 20px;
@@ -142,15 +137,15 @@
 
         .tab {
             flex: 1;
-            min-width: 100px;
-            padding: 16px 12px;
+            min-width: 90px;
+            padding: 16px 8px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
             font-weight: 600;
             border: none;
             background: transparent;
-            font-size: 0.9em;
+            font-size: 0.85em;
             color: var(--gray-600);
             border-bottom: 3px solid transparent;
         }
@@ -168,9 +163,7 @@
             margin: 0 auto;
         }
 
-        .tab-content.active {
-            display: block;
-        }
+        .tab-content.active { display: block; }
 
         .stats-grid {
             display: grid;
@@ -268,15 +261,8 @@
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
         }
 
-        .btn-success {
-            background: var(--success);
-            color: white;
-        }
-
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
+        .btn-success { background: var(--success); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
 
         .tasks-grid {
             display: grid;
@@ -312,9 +298,7 @@
             background: linear-gradient(to right, #f0fdf4 0%, white 5%);
         }
 
-        .task-card.completed {
-            opacity: 0.6;
-        }
+        .task-card.completed { opacity: 0.6; }
 
         .task-header {
             display: flex;
@@ -331,9 +315,7 @@
             flex: 1;
         }
 
-        .task-card.completed .task-title {
-            text-decoration: line-through;
-        }
+        .task-card.completed .task-title { text-decoration: line-through; }
 
         .priority-badge {
             padding: 4px 12px;
@@ -403,7 +385,6 @@
             border-color: var(--primary);
         }
 
-        /* RECORDING SECTION */
         .recording-section {
             background: var(--gray-50);
             padding: 24px;
@@ -568,6 +549,14 @@
             margin-bottom: 20px;
             display: flex;
             gap: 12px;
+        }
+
+        .alert-box.info {
+            background: #dbeafe;
+            border-left: 4px solid var(--primary);
+        }
+
+        .alert-box.warning {
             background: #fef3c7;
             border-left: 4px solid var(--warning);
         }
@@ -592,13 +581,103 @@
         .notification.success { border-left: 4px solid var(--success); }
         .notification.error { border-left: 4px solid var(--danger); }
 
+        /* ALARM MODAL */
+        .alarm-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s;
+        }
+
+        .alarm-modal.show { display: flex; }
+
+        .alarm-content {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            animation: bounce 0.5s;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+
+        .alarm-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+            animation: ring 1s infinite;
+        }
+
+        @keyframes ring {
+            0%, 100% { transform: rotate(0deg); }
+            10%, 30% { transform: rotate(-10deg); }
+            20%, 40% { transform: rotate(10deg); }
+        }
+
+        .alarm-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 16px;
+        }
+
+        .alarm-text {
+            font-size: 1.2em;
+            color: var(--gray-600);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .alarm-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .alarm-buttons .btn {
+            flex: 1;
+            font-size: 1.1em;
+        }
+
+        .repeat-options {
+            display: none;
+            margin-top: 12px;
+            padding: 12px;
+            background: var(--gray-50);
+            border-radius: 8px;
+        }
+
+        .repeat-options.show { display: block; }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            min-width: auto;
+        }
+
         @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 12px;
-            }
+            .header-content { flex-direction: column; gap: 12px; }
             .tabs { top: 92px; }
-            .tab { font-size: 0.8em; padding: 12px 8px; min-width: 80px; }
+            .tab { font-size: 0.75em; padding: 12px 6px; min-width: 70px; }
             .tab-content { padding: 16px; }
             .stats-grid { grid-template-columns: 1fr 1fr; }
             .input-row { flex-direction: column; }
@@ -606,6 +685,8 @@
             .recording-controls { flex-direction: column; }
             .task-actions { flex-direction: column; }
             .task-actions .btn { width: 100%; }
+            .alarm-content { padding: 30px 20px; }
+            .alarm-title { font-size: 1.5em; }
         }
     </style>
 </head>
@@ -614,7 +695,7 @@
         <div class="install-prompt" id="installPrompt">
             <div class="install-prompt-content">
                 <strong>📱 Instalar TaskPro</strong>
-                <p style="font-size: 0.9em;">Instala para mejor experiencia</p>
+                <p style="font-size: 0.9em;">Mejor experiencia</p>
             </div>
             <button onclick="installApp()">Instalar</button>
             <button onclick="closePrompt()" style="background: transparent; color: white;">✕</button>
@@ -633,7 +714,7 @@
         <div class="tabs">
             <button class="tab active" onclick="switchTab('tasks')">📝 Tareas</button>
             <button class="tab" onclick="switchTab('meetings')">🎙️ Reuniones</button>
-            <button class="tab" onclick="switchTab('reminders')">⏰ Recordatorios</button>
+            <button class="tab" onclick="switchTab('alarms')">⏰ Alarmas</button>
             <button class="tab" onclick="switchTab('search')">🔍 Buscar</button>
         </div>
 
@@ -696,7 +777,7 @@
                 <div class="recording-controls">
                     <button class="record-button" id="recordBtn" onclick="toggleRecording()">🎤</button>
                     <div class="recording-status" id="recordingStatus">
-                        Presiona el micrófono para comenzar
+                        Presiona el micrófono
                     </div>
                 </div>
 
@@ -712,29 +793,63 @@
             <div class="tasks-grid" id="meetingList"></div>
         </div>
 
-        <!-- RECORDATORIOS -->
-        <div id="reminders" class="tab-content">
-            <h2 style="margin-bottom: 24px;">⏰ Recordatorios</h2>
+        <!-- ALARMAS -->
+        <div id="alarms" class="tab-content">
+            <h2 style="margin-bottom: 24px;">⏰ Alarmas con Sonido</h2>
 
-            <div class="alert-box">
-                <span style="font-size: 1.5em;">⚠️</span>
+            <div class="alert-box info">
+                <span style="font-size: 1.5em;">💡</span>
                 <div>
-                    <strong>Nota:</strong> Los recordatorios solo funcionan cuando el navegador está abierto. Para alarmas confiables, usa la app de Alarmas nativa de tu teléfono.
+                    <strong>¡Alarmas mejoradas!</strong> Ahora con sonido y ventana emergente. Para que funcionen, mantén la app abierta en segundo plano o instalada.
                 </div>
             </div>
 
             <div class="form-section">
                 <div class="form-group">
-                    <label class="form-label">¿Qué recordar? *</label>
-                    <input type="text" id="reminderText" placeholder="Ej: Llamar al cliente">
+                    <label class="form-label">Nombre de la alarma *</label>
+                    <input type="text" id="alarmText" placeholder="Ej: Llamar al cliente">
                 </div>
-                <div class="input-row">
-                    <input type="datetime-local" id="reminderTime" style="flex: 1;">
-                    <button class="btn btn-primary" onclick="addReminder()">⏰ Crear</button>
+                
+                <div class="form-group">
+                    <label class="form-label">Fecha y Hora *</label>
+                    <input type="datetime-local" id="alarmTime">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Tono de alarma</label>
+                    <select id="alarmSound">
+                        <option value="beep">🔔 Clásico (Beep)</option>
+                        <option value="bell">🛎️ Campana</option>
+                        <option value="digital">📱 Digital</option>
+                        <option value="gentle">☀️ Suave</option>
+                        <option value="urgent">🚨 Urgente</option>
+                    </select>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="alarmRepeat">
+                    <label for="alarmRepeat">Repetir en días específicos</label>
+                </div>
+
+                <div class="repeat-options" id="repeatOptions">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px; margin-top: 8px;">
+                        <label><input type="checkbox" class="day-check" value="1"> Lunes</label>
+                        <label><input type="checkbox" class="day-check" value="2"> Martes</label>
+                        <label><input type="checkbox" class="day-check" value="3"> Miércoles</label>
+                        <label><input type="checkbox" class="day-check" value="4"> Jueves</label>
+                        <label><input type="checkbox" class="day-check" value="5"> Viernes</label>
+                        <label><input type="checkbox" class="day-check" value="6"> Sábado</label>
+                        <label><input type="checkbox" class="day-check" value="0"> Domingo</label>
+                    </div>
+                </div>
+
+                <div class="input-row" style="margin-top: 16px;">
+                    <button class="btn btn-primary" onclick="addAlarm()" style="flex: 1;">⏰ Crear Alarma</button>
                 </div>
             </div>
 
-            <div class="tasks-grid" id="reminderList"></div>
+            <h3 style="margin-bottom: 16px;">🔔 Alarmas Programadas</h3>
+            <div class="tasks-grid" id="alarmList"></div>
         </div>
 
         <!-- BUSCAR -->
@@ -750,15 +865,103 @@
         </div>
     </div>
 
+    <!-- ALARM MODAL -->
+    <div class="alarm-modal" id="alarmModal">
+        <div class="alarm-content">
+            <div class="alarm-icon">⏰</div>
+            <div class="alarm-title">¡ALARMA!</div>
+            <div class="alarm-text" id="alarmModalText">Es hora de tu tarea</div>
+            <div class="alarm-buttons">
+                <button class="btn btn-success" onclick="snoozeAlarm()">💤 5 min</button>
+                <button class="btn btn-danger" onclick="dismissAlarm()">✓ OK</button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="alarmAudio" preload="auto"></audio>
+
     <script>
+        // AUDIO CONTEXT
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        const soundPatterns = {
+            beep: () => {
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+                osc.frequency.value = 800;
+                gain.gain.value = 0.3;
+                osc.start();
+                osc.stop(audioContext.currentTime + 0.2);
+            },
+            bell: () => {
+                for (let i = 0; i < 3; i++) {
+                    setTimeout(() => {
+                        const osc = audioContext.createOscillator();
+                        const gain = audioContext.createGain();
+                        osc.connect(gain);
+                        gain.connect(audioContext.destination);
+                        osc.frequency.value = 523;
+                        gain.gain.value = 0.3;
+                        osc.start();
+                        osc.stop(audioContext.currentTime + 0.1);
+                    }, i * 200);
+                }
+            },
+            digital: () => {
+                [880, 988, 1047].forEach((freq, i) => {
+                    setTimeout(() => {
+                        const osc = audioContext.createOscillator();
+                        const gain = audioContext.createGain();
+                        osc.connect(gain);
+                        gain.connect(audioContext.destination);
+                        osc.frequency.value = freq;
+                        gain.gain.value = 0.2;
+                        osc.start();
+                        osc.stop(audioContext.currentTime + 0.15);
+                    }, i * 150);
+                });
+            },
+            gentle: () => {
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+                osc.frequency.value = 440;
+                gain.gain.setValueAtTime(0, audioContext.currentTime);
+                gain.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + 0.5);
+                gain.gain.linearRampToValueAtTime(0, audioContext.currentTime + 1);
+                osc.start();
+                osc.stop(audioContext.currentTime + 1);
+            },
+            urgent: () => {
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => {
+                        const osc = audioContext.createOscillator();
+                        const gain = audioContext.createGain();
+                        osc.connect(gain);
+                        gain.connect(audioContext.destination);
+                        osc.frequency.value = i % 2 === 0 ? 1000 : 800;
+                        gain.gain.value = 0.4;
+                        osc.start();
+                        osc.stop(audioContext.currentTime + 0.1);
+                    }, i * 150);
+                }
+            }
+        };
+
         let deferredPrompt;
         let tasks = JSON.parse(localStorage.getItem('taskpro_tasks')) || [];
         let meetings = JSON.parse(localStorage.getItem('taskpro_meetings')) || [];
-        let reminders = JSON.parse(localStorage.getItem('taskpro_reminders')) || [];
+        let alarms = JSON.parse(localStorage.getItem('taskpro_alarms')) || [];
         let currentFilter = 'todas';
         let isRecording = false;
         let recognition = null;
         let transcriptionText = '';
+        let alarmIntervals = {};
+        let currentAlarmSound = null;
+        let currentAlarmId = null;
 
         // PWA
         window.addEventListener('beforeinstallprompt', (e) => {
@@ -787,6 +990,11 @@
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').catch(e => console.log(e));
         }
+
+        // REPEAT OPTIONS
+        document.getElementById('alarmRepeat').addEventListener('change', function() {
+            document.getElementById('repeatOptions').classList.toggle('show', this.checked);
+        });
 
         // SPEECH RECOGNITION
         function initSpeech() {
@@ -1007,64 +1215,224 @@
             `).join('');
         }
 
-        // REMINDERS
-        function addReminder() {
-            const text = document.getElementById('reminderText').value.trim();
-            const time = document.getElementById('reminderTime').value;
+        // ALARMS
+        function addAlarm() {
+            const text = document.getElementById('alarmText').value.trim();
+            const time = document.getElementById('alarmTime').value;
+            const sound = document.getElementById('alarmSound').value;
+            const repeat = document.getElementById('alarmRepeat').checked;
 
             if (!text || !time) return showNotification('Completa los campos', 'error');
 
-            reminders.unshift({
+            let repeatDays = null;
+            if (repeat) {
+                repeatDays = Array.from(document.querySelectorAll('.day-check:checked')).map(cb => parseInt(cb.value));
+                if (repeatDays.length === 0) return showNotification('Selecciona días para repetir', 'error');
+            }
+
+            const alarm = {
                 id: Date.now(),
                 text,
                 time: new Date(time).toISOString(),
+                sound,
+                repeat: repeatDays,
+                active: true,
                 createdAt: new Date().toISOString()
-            });
+            };
 
-            localStorage.setItem('taskpro_reminders', JSON.stringify(reminders));
-            renderReminders();
+            alarms.unshift(alarm);
+            localStorage.setItem('taskpro_alarms', JSON.stringify(alarms));
+            scheduleAlarm(alarm);
+            renderAlarms();
 
-            document.getElementById('reminderText').value = '';
-            document.getElementById('reminderTime').value = '';
+            document.getElementById('alarmText').value = '';
+            document.getElementById('alarmTime').value = '';
+            document.getElementById('alarmRepeat').checked = false;
+            document.getElementById('repeatOptions').classList.remove('show');
+            document.querySelectorAll('.day-check').forEach(cb => cb.checked = false);
 
             if ('Notification' in window) Notification.requestPermission();
-            showNotification('⏰ Recordatorio creado', 'success');
+            showNotification('⏰ Alarma creada', 'success');
         }
 
-        function deleteReminder(id) {
-            if (confirm('¿Eliminar?')) {
-                reminders = reminders.filter(r => r.id !== id);
-                localStorage.setItem('taskpro_reminders', JSON.stringify(reminders));
-                renderReminders();
+        function scheduleAlarm(alarm) {
+            function checkAlarm() {
+                if (!alarm.active) return;
+
+                const now = new Date();
+                const alarmTime = new Date(alarm.time);
+
+                if (alarm.repeat) {
+                    const currentDay = now.getDay();
+                    if (alarm.repeat.includes(currentDay)) {
+                        const alarmHour = alarmTime.getHours();
+                        const alarmMinute = alarmTime.getMinutes();
+                        const nowHour = now.getHours();
+                        const nowMinute = now.getMinutes();
+
+                        if (alarmHour === nowHour && alarmMinute === nowMinute && now.getSeconds() < 2) {
+                            triggerAlarm(alarm);
+                        }
+                    }
+                } else {
+                    if (now >= alarmTime && now - alarmTime < 2000) {
+                        triggerAlarm(alarm);
+                        alarm.active = false;
+                        localStorage.setItem('taskpro_alarms', JSON.stringify(alarms));
+                        renderAlarms();
+                    }
+                }
+            }
+
+            if (alarmIntervals[alarm.id]) {
+                clearInterval(alarmIntervals[alarm.id]);
+            }
+
+            alarmIntervals[alarm.id] = setInterval(checkAlarm, 1000);
+            checkAlarm();
+        }
+
+        function triggerAlarm(alarm) {
+            currentAlarmId = alarm.id;
+            currentAlarmSound = alarm.sound;
+
+            document.getElementById('alarmModalText').textContent = alarm.text;
+            document.getElementById('alarmModal').classList.add('show');
+
+            playAlarmSound(alarm.sound);
+
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification('⏰ Alarma - TaskPro', {
+                    body: alarm.text,
+                    icon: '⏰',
+                    requireInteraction: true
+                });
+            }
+
+            if ('vibrate' in navigator) {
+                navigator.vibrate([200, 100, 200, 100, 200]);
             }
         }
 
-        function renderReminders() {
-            const list = document.getElementById('reminderList');
-            if (reminders.length === 0) {
-                list.innerHTML = '<div class="empty-state"><div class="empty-icon">⏰</div><h3>No hay recordatorios</h3></div>';
+        function playAlarmSound(sound) {
+            if (soundPatterns[sound]) {
+                const playInterval = setInterval(() => {
+                    if (!document.getElementById('alarmModal').classList.contains('show')) {
+                        clearInterval(playInterval);
+                        return;
+                    }
+                    soundPatterns[sound]();
+                }, 1500);
+            }
+        }
+
+        function dismissAlarm() {
+            document.getElementById('alarmModal').classList.remove('show');
+            currentAlarmId = null;
+            currentAlarmSound = null;
+        }
+
+        function snoozeAlarm() {
+            document.getElementById('alarmModal').classList.remove('show');
+            
+            if (currentAlarmId) {
+                const alarm = alarms.find(a => a.id === currentAlarmId);
+                if (alarm) {
+                    const snoozeTime = new Date();
+                    snoozeTime.setMinutes(snoozeTime.getMinutes() + 5);
+                    
+                    const snoozeAlarm = {
+                        ...alarm,
+                        id: Date.now(),
+                        time: snoozeTime.toISOString(),
+                        text: alarm.text + ' (Pospuesto)',
+                        repeat: null
+                    };
+                    
+                    alarms.unshift(snoozeAlarm);
+                    localStorage.setItem('taskpro_alarms', JSON.stringify(alarms));
+                    scheduleAlarm(snoozeAlarm);
+                    renderAlarms();
+                    
+                    showNotification('💤 Alarma pospuesta 5 minutos', 'success');
+                }
+            }
+            
+            currentAlarmId = null;
+            currentAlarmSound = null;
+        }
+
+        function toggleAlarm(id) {
+            const alarm = alarms.find(a => a.id === id);
+            if (alarm) {
+                alarm.active = !alarm.active;
+                localStorage.setItem('taskpro_alarms', JSON.stringify(alarms));
+                if (alarm.active) {
+                    scheduleAlarm(alarm);
+                } else if (alarmIntervals[id]) {
+                    clearInterval(alarmIntervals[id]);
+                    delete alarmIntervals[id];
+                }
+                renderAlarms();
+            }
+        }
+
+        function deleteAlarm(id) {
+            if (confirm('¿Eliminar?')) {
+                alarms = alarms.filter(a => a.id !== id);
+                if (alarmIntervals[id]) {
+                    clearInterval(alarmIntervals[id]);
+                    delete alarmIntervals[id];
+                }
+                localStorage.setItem('taskpro_alarms', JSON.stringify(alarms));
+                renderAlarms();
+            }
+        }
+
+        function renderAlarms() {
+            const list = document.getElementById('alarmList');
+            if (alarms.length === 0) {
+                list.innerHTML = '<div class="empty-state"><div class="empty-icon">⏰</div><h3>No hay alarmas</h3></div>';
                 return;
             }
 
-            const sorted = [...reminders].sort((a, b) => new Date(a.time) - new Date(b.time));
-            list.innerHTML = sorted.map(r => {
-                const date = new Date(r.time);
-                const isPast = date < new Date();
+            const sorted = [...alarms].sort((a, b) => new Date(a.time) - new Date(b.time));
+            list.innerHTML = sorted.map(a => {
+                const date = new Date(a.time);
+                const isPast = date < new Date() && !a.repeat;
                 const isToday = date.toDateString() === new Date().toDateString();
 
+                const soundLabels = {
+                    beep: '🔔 Clásico',
+                    bell: '🛎️ Campana',
+                    digital: '📱 Digital',
+                    gentle: '☀️ Suave',
+                    urgent: '🚨 Urgente'
+                };
+
                 return `
-                    <div class="task-card ${isPast ? 'completed' : ''}">
+                    <div class="task-card ${isPast && !a.active ? 'completed' : ''}" style="${!a.active ? 'opacity: 0.5;' : ''}">
                         <div class="task-header">
-                            <div class="task-title">${escapeHtml(r.text)}</div>
-                            ${isToday && !isPast ? '<span class="priority-badge priority-alta-badge">HOY</span>' : ''}
+                            <div class="task-title">${escapeHtml(a.text)}</div>
+                            ${isToday && a.active ? '<span class="priority-badge priority-alta-badge">HOY</span>' : ''}
                         </div>
                         <div class="task-meta">
                             <span>📅 ${date.toLocaleDateString('es')}</span>
                             <span>⏰ ${date.toLocaleTimeString('es', {hour: '2-digit', minute: '2-digit'})}</span>
-                            ${isPast ? '<span style="color: var(--danger);">Vencido</span>' : '<span style="color: var(--success);">Programado</span>'}
+                            <span>${soundLabels[a.sound]}</span>
+                            ${a.repeat ? '<span>🔄 Repetir</span>' : ''}
+                            ${a.active ? '<span style="color: var(--success);">✓ Activa</span>' : '<span style="color: var(--gray-400);">Desactivada</span>'}
                         </div>
+                        ${a.repeat ? `
+                            <div style="margin: 12px 0; font-size: 0.85em; color: var(--gray-600);">
+                                Días: ${a.repeat.map(d => ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][d]).join(', ')}
+                            </div>
+                        ` : ''}
                         <div class="task-actions">
-                            <button class="btn btn-danger" onclick="deleteReminder(${r.id})">🗑️</button>
+                            <button class="btn ${a.active ? 'btn-secondary' : 'btn-success'}" onclick="toggleAlarm(${a.id})">
+                                ${a.active ? '⏸️ Pausar' : '▶️ Activar'}
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteAlarm(${a.id})">🗑️</button>
                         </div>
                     </div>
                 `;
@@ -1095,9 +1463,9 @@
                 }
             });
 
-            reminders.forEach(r => {
-                if (r.text.toLowerCase().includes(query)) {
-                    found.push({...r, type: 'Recordatorio'});
+            alarms.forEach(a => {
+                if (a.text.toLowerCase().includes(query)) {
+                    found.push({...a, type: 'Alarma'});
                 }
             });
 
@@ -1149,7 +1517,27 @@
         initSpeech();
         renderTasks();
         renderMeetings();
-        renderReminders();
+        renderAlarms();
+
+        // Schedule existing alarms
+        alarms.forEach(alarm => {
+            if (alarm.active) {
+                scheduleAlarm(alarm);
+            }
+        });
+
+        // Request permissions
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+
+        // Keep app awake
+        let wakeLock = null;
+        if ('wakeLock' in navigator) {
+            navigator.wakeLock.request('screen').then(lock => {
+                wakeLock = lock;
+            }).catch(e => console.log(e));
+        }
     </script>
 </body>
 </html>
